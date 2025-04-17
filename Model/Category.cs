@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace NorthWindConsole.Model;
 
 public partial class Category
 {
     public int CategoryId { get; set; }
+    [Required]
 
     public string CategoryName { get; set; } = null!;
 
