@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace NorthwindConsole.Model;
+namespace NorthWindConsole.Model;
 
 public partial class DataContext : DbContext
 {
