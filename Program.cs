@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using NorthWindConsole.Model;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
 string path = Directory.GetCurrentDirectory() + "//nlog.config";
 
 // create instance of Logger
@@ -11,12 +13,12 @@ var logger = LogManager.Setup().LoadConfigurationFromFile(path).GetCurrentClassL
 
 logger.Info("Program started");
 
-    var configuration = new ConfigurationBuilder()
-            .AddJsonFile($"appsettings.json");
+var configuration = new ConfigurationBuilder()
+        .AddJsonFile($"appsettings.json");
 
-    var config = configuration.Build();
+var config = configuration.Build();
 
-    var db = new DataContext();
+var db = new DataContext();
 
 do
 {
@@ -113,25 +115,41 @@ do
       }
     }
   }
-    else if (choice == "5")
+  else if (choice == "5")
   {
     // display products
-    Console.WriteLine("1) All Products");
-    Console.WriteLine("2) Active Products");
-    Console.WriteLine("3) Discontinued Products");
-    Console.WriteLine("Enter to go back");
-    
-    var query = db.Products.OrderBy(p => p.ProductName);
-
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine($"{query.Count()} records returned");
-    Console.ForegroundColor = ConsoleColor.Magenta;
-    foreach (var item in query)
+    string? productOption;
+    do
     {
-      Console.WriteLine($"{item.ProductName}");
+      Console.WriteLine("1) All Products");
+      Console.WriteLine("2) Active Products");
+      Console.WriteLine("3) Discontinued Products");
+      Console.WriteLine("Enter to go back");
+      productOption = Console.ReadLine();
+      if (productOption.IsNullOrEmpty()) break;
+      if (!Regex.IsMatch(productOption, @"^[1-3]$"))
+        Console.WriteLine("\nPlease enter a valid input");
+    } while (!Regex.IsMatch(productOption, @"^[1-3]$"));
+
+      IOrderedQueryable<Product>? query = db.Products.OrderBy(p => p.ProductName);
+      if (productOption == "2") query = (IOrderedQueryable<Product>)db.Products.Where(p => !p.Discontinued);
+      if (productOption == "3") query = (IOrderedQueryable<Product>)db.Products.Where(p => p.Discontinued);
+
+      Console.ForegroundColor = ConsoleColor.Green;
+      Console.WriteLine($"{query.Count()} records returned");
+      Console.ForegroundColor = ConsoleColor.Magenta;
+      foreach (var item in query)
+      {
+        if (item.Discontinued)
+        {
+          Console.ForegroundColor = ConsoleColor.Red;
+          Console.WriteLine($"{item.ProductName}");
+          Console.ForegroundColor = ConsoleColor.Magenta;
+        }
+        else Console.WriteLine($"{item.ProductName}");
+      }
+      Console.ForegroundColor = ConsoleColor.White;
     }
-    Console.ForegroundColor = ConsoleColor.White;
-  }
   else if (String.IsNullOrEmpty(choice))
   {
     break;
