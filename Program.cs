@@ -11,12 +11,20 @@ var logger = LogManager.Setup().LoadConfigurationFromFile(path).GetCurrentClassL
 
 logger.Info("Program started");
 
+    var configuration = new ConfigurationBuilder()
+            .AddJsonFile($"appsettings.json");
+
+    var config = configuration.Build();
+
+    var db = new DataContext();
+
 do
 {
   Console.WriteLine("1) Display categories");
   Console.WriteLine("2) Add category");
   Console.WriteLine("3) Display Category and related products");
   Console.WriteLine("4) Display all Categories and their related products");
+  Console.WriteLine("5) Display products");
   Console.WriteLine("Enter to quit");
   string? choice = Console.ReadLine();
   Console.Clear();
@@ -25,12 +33,7 @@ do
   if (choice == "1")
   {
     // display categories
-    var configuration = new ConfigurationBuilder()
-            .AddJsonFile($"appsettings.json");
 
-    var config = configuration.Build();
-
-    var db = new DataContext();
     var query = db.Categories.OrderBy(p => p.CategoryName);
 
     Console.ForegroundColor = ConsoleColor.Green;
@@ -56,7 +59,6 @@ do
     var isValid = Validator.TryValidateObject(category, context, results, true);
     if (isValid)
     {
-      var db = new DataContext();
       // check for unique name
       if (db.Categories.Any(c => c.CategoryName == category.CategoryName))
       {
@@ -80,7 +82,6 @@ do
   }
   else if (choice == "3")
   {
-    var db = new DataContext();
     var query = db.Categories.OrderBy(p => p.CategoryId);
 
     Console.WriteLine("Select the category whose products you want to display:");
@@ -102,7 +103,6 @@ do
   }
   else if (choice == "4")
   {
-    var db = new DataContext();
     var query = db.Categories.Include("Products").OrderBy(p => p.CategoryId);
     foreach (var item in query)
     {
@@ -112,6 +112,20 @@ do
         Console.WriteLine($"\t{p.ProductName}");
       }
     }
+  }
+    else if (choice == "5")
+  {
+    // display products
+    var query = db.Products.OrderBy(p => p.ProductName);
+
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine($"{query.Count()} records returned");
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    foreach (var item in query)
+    {
+      Console.WriteLine($"{item.ProductName}");
+    }
+    Console.ForegroundColor = ConsoleColor.White;
   }
   else if (String.IsNullOrEmpty(choice))
   {
