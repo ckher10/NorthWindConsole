@@ -116,6 +116,11 @@ do
     else if (choice == "5")
   {
     // display products
+    Console.WriteLine("1) All Products");
+    Console.WriteLine("2) Active Products");
+    Console.WriteLine("3) Discontinued Products");
+    Console.WriteLine("Enter to go back");
+    
     var query = db.Products.OrderBy(p => p.ProductName);
 
     Console.ForegroundColor = ConsoleColor.Green;
