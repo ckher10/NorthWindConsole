@@ -132,13 +132,37 @@ do
         Console.WriteLine("\nPlease enter a valid input");
     } while (!Regex.IsMatch(productOption, @"^[1-3]$"));
 
-      IOrderedQueryable<Product>? query = db.Products.OrderBy(p => p.ProductName);
-      if (productOption == "2") query = (IOrderedQueryable<Product>)db.Products.Where(p => !p.Discontinued);
-      if (productOption == "3") query = (IOrderedQueryable<Product>)db.Products.Where(p => p.Discontinued);
+    IOrderedQueryable<Product>? query = db.Products.OrderBy(p => p.ProductName);
+    if (productOption == "2") query = (IOrderedQueryable<Product>)db.Products.Where(p => !p.Discontinued);
+    if (productOption == "3") query = (IOrderedQueryable<Product>)db.Products.Where(p => p.Discontinued);
 
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine($"{query.Count()} records returned");
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    foreach (var item in query)
+    {
+      if (item.Discontinued)
+      {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"{item.ProductName}");
+        Console.ForegroundColor = ConsoleColor.Magenta;
+      }
+      else Console.WriteLine($"{item.ProductName}");
+    }
+    Console.ForegroundColor = ConsoleColor.White;
+  }
+  else if (choice == "6")
+  {
+    //Find products
+    Console.Write("Search: ");
+    string? search = Console.ReadLine();
+    if (search.Count() > 0 && !search.IsNullOrEmpty())
+    {
+      IOrderedQueryable<Product>? query = (IOrderedQueryable<Product>?)db.Products.Where(p => p.ProductName.StartsWith(search));
       Console.ForegroundColor = ConsoleColor.Green;
       Console.WriteLine($"{query.Count()} records returned");
       Console.ForegroundColor = ConsoleColor.Magenta;
+
       foreach (var item in query)
       {
         if (item.Discontinued)
@@ -151,9 +175,7 @@ do
       }
       Console.ForegroundColor = ConsoleColor.White;
     }
-    else if (choice == "6") {
-      //TODO Find products
-    }
+  }
   else if (String.IsNullOrEmpty(choice))
   {
     break;
