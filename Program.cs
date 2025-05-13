@@ -186,7 +186,8 @@ do
     Console.WriteLine($"Discontinued: {query.First().Discontinued}");
     Console.ForegroundColor = ConsoleColor.White;
   }
-  else if (choice == "7") {
+  else if (choice == "7")
+  {
     //Add Product
     Product product = new();
     var suppliers = db.Suppliers;
@@ -196,11 +197,24 @@ do
 
     foreach (var supplier in suppliers) Console.WriteLine($"{supplier.SupplierId} | {supplier.CompanyName}");
 
-    do {
+    bool supplierIDExists = false;
+    string? productInput = "";
+    do
+    {
       Console.WriteLine("Enter the Supplier ID: ");
-    product.SupplierId = Convert.ToInt32(Console.ReadLine());
-    } while (!suppliers.Any(p => p.SupplierId == Convert.ToInt32(product.SupplierId)));
-    
+      productInput = Console.ReadLine();
+      if (!Regex.IsMatch(productInput, @"^\d+$")) {
+        logger.Info("Input must be a number");
+        continue;
+      }
+      product.SupplierId = Convert.ToInt32(productInput);
+      supplierIDExists = suppliers.Any(p => p.SupplierId == Convert.ToInt32(product.SupplierId));
+      if (!supplierIDExists)
+      {
+        logger.Info("ID does not exist");
+      }
+    } while (!supplierIDExists);
+
     ValidationContext context = new ValidationContext(product, null, null);
     List<ValidationResult> results = new List<ValidationResult>();
 
