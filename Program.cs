@@ -131,6 +131,7 @@ do
       if (!Regex.IsMatch(productOption, @"^[1-3]$"))
         Console.WriteLine("\nPlease enter a valid input");
     } while (!Regex.IsMatch(productOption, @"^[1-3]$"));
+    if (productOption.IsNullOrEmpty()) continue;
 
     IOrderedQueryable<Product>? query = db.Products.OrderBy(p => p.ProductName);
     if (productOption == "2") query = (IOrderedQueryable<Product>)db.Products.Where(p => !p.Discontinued);
@@ -154,27 +155,35 @@ do
   else if (choice == "6")
   {
     //Find products
-    Console.Write("Search: ");
-    string? search = Console.ReadLine();
-    if (search.Count() > 0 && !search.IsNullOrEmpty())
+    string? search = "";
+    do
     {
-      IOrderedQueryable<Product>? query = (IOrderedQueryable<Product>?)db.Products.Where(p => p.ProductName.StartsWith(search));
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine($"{query.Count()} records returned");
-      Console.ForegroundColor = ConsoleColor.Magenta;
-
-      foreach (var item in query)
+      Console.WriteLine("Enter Product ID or press enter to go back");
+      Console.Write("Search ID: ");
+      search = Console.ReadLine();
+      if (search.IsNullOrEmpty()) break;
+      if (!Regex.IsMatch(search, @"^\d+$"))
       {
-        if (item.Discontinued)
-        {
-          Console.ForegroundColor = ConsoleColor.Red;
-          Console.WriteLine($"{item.ProductName}");
-          Console.ForegroundColor = ConsoleColor.Magenta;
-        }
-        else Console.WriteLine($"{item.ProductName}");
+        logger.Info("Please input valid ID");
       }
-      Console.ForegroundColor = ConsoleColor.White;
-    }
+    } while (!Regex.IsMatch(search, @"^\d+$"));
+    if (search.IsNullOrEmpty()) continue;
+
+    var query = db.Products.Where(p => p.ProductId == Convert.ToInt32(search));
+
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    if (query.First().Discontinued) Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"ID: {query.First().ProductId}");
+    Console.WriteLine($"Name: {query.First().ProductName}");
+    Console.WriteLine($"Category ID:{query.First().CategoryId}");
+    Console.WriteLine($"Supplier ID:{query.First().SupplierId}");
+    Console.WriteLine($"Price: {query.First().UnitPrice}");
+    Console.WriteLine($"Quantity Per Unit: {query.First().QuantityPerUnit}");
+    Console.WriteLine($"Units in Stock: {query.First().UnitsInStock}");
+    Console.WriteLine($"Units On Order: {query.First().UnitsOnOrder}");
+    Console.WriteLine($"Reorder Level: {query.First().ReorderLevel}");
+    Console.WriteLine($"Discontinued: {query.First().Discontinued}");
+    Console.ForegroundColor = ConsoleColor.White;
   }
   else if (String.IsNullOrEmpty(choice))
   {
