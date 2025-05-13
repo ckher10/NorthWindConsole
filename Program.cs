@@ -162,11 +162,11 @@ do
       Console.Write("Search ID: ");
       search = Console.ReadLine();
       if (search.IsNullOrEmpty()) break;
+      if (!db.Products.Any(p => p.ProductId == Convert.ToInt32(search)))
+        logger.Info("ID does not exist");
       if (!Regex.IsMatch(search, @"^\d+$"))
-      {
         logger.Info("Please input valid ID");
-      }
-    } while (!Regex.IsMatch(search, @"^\d+$"));
+    } while (!Regex.IsMatch(search, @"^\d+$") || !db.Products.Any(p => p.ProductId == Convert.ToInt32(search)));
     if (search.IsNullOrEmpty()) continue;
 
     var query = db.Products.Where(p => p.ProductId == Convert.ToInt32(search));
