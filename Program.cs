@@ -28,6 +28,7 @@ do
   Console.WriteLine("4) Display all Categories and their related products");
   Console.WriteLine("5) Display products");
   Console.WriteLine("6) Find Product");
+  Console.WriteLine("7) Add Product");
   Console.WriteLine("Enter to quit");
   string? choice = Console.ReadLine();
   Console.Clear();
@@ -184,6 +185,9 @@ do
     Console.WriteLine($"Reorder Level: {query.First().ReorderLevel}");
     Console.WriteLine($"Discontinued: {query.First().Discontinued}");
     Console.ForegroundColor = ConsoleColor.White;
+  }
+  else if (choice == "7") {
+    //Add Product
   }
   else if (String.IsNullOrEmpty(choice))
   {
