@@ -215,6 +215,26 @@ do
       }
     } while (!supplierIDExists);
 
+    foreach (var category in categories) Console.WriteLine($"{category.CategoryId} | {category.CategoryName}");
+
+
+    bool categoryIDExists = false;
+    do
+    {
+      Console.WriteLine("Enter the Category ID: ");
+      productInput = Console.ReadLine();
+      if (!Regex.IsMatch(productInput, @"^\d+$")) {
+        logger.Info("Input must be a number");
+        continue;
+      }
+      product.CategoryId = Convert.ToInt32(productInput);
+      categoryIDExists = categories.Any(p => p.CategoryId == Convert.ToInt32(product.CategoryId));
+      if (!categoryIDExists)
+      {
+        logger.Info("ID does not exist");
+      }
+    } while (!categoryIDExists);
+
     ValidationContext context = new ValidationContext(product, null, null);
     List<ValidationResult> results = new List<ValidationResult>();
 
