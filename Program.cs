@@ -27,6 +27,7 @@ do
   Console.WriteLine("3) Display Category and related products");
   Console.WriteLine("4) Display all Categories and their related products");
   Console.WriteLine("5) Display products");
+  Console.WriteLine("6) Find Product");
   Console.WriteLine("Enter to quit");
   string? choice = Console.ReadLine();
   Console.Clear();
@@ -149,6 +150,9 @@ do
         else Console.WriteLine($"{item.ProductName}");
       }
       Console.ForegroundColor = ConsoleColor.White;
+    }
+    else if (choice == "6") {
+      //TODO Find products
     }
   else if (String.IsNullOrEmpty(choice))
   {
