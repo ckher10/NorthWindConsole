@@ -188,6 +188,45 @@ do
   }
   else if (choice == "7") {
     //Add Product
+    Product product = new();
+    var suppliers = db.Suppliers;
+    var categories = db.Categories;
+    Console.WriteLine("Enter Product Name: ");
+    product.ProductName = Console.ReadLine()!;
+
+    foreach (var supplier in suppliers) Console.WriteLine($"{supplier.SupplierId} | {supplier.CompanyName}");
+
+    do {
+      Console.WriteLine("Enter the Supplier ID: ");
+    product.SupplierId = Convert.ToInt32(Console.ReadLine());
+    } while (!suppliers.Any(p => p.SupplierId == Convert.ToInt32(product.SupplierId)));
+    
+    ValidationContext context = new ValidationContext(product, null, null);
+    List<ValidationResult> results = new List<ValidationResult>();
+
+    var isValid = Validator.TryValidateObject(product, context, results, true);
+    // if (isValid)
+    // {
+    //   // check for unique name
+    //   if (db.Categories.Any(c => c.CategoryName == category.CategoryName))
+    //   {
+    //     // generate validation error
+    //     isValid = false;
+    //     results.Add(new ValidationResult("Name exists", ["CategoryName"]));
+    //   }
+    //   else
+    //   {
+    //     logger.Info("Validation passed");
+    //     // TODO: save category to db
+    //   }
+    // }
+    // if (!isValid)
+    // {
+    //   foreach (var result in results)
+    //   {
+    //     logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+    //   }
+    // }
   }
   else if (String.IsNullOrEmpty(choice))
   {
