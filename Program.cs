@@ -424,6 +424,7 @@ do
             logger.Info($"New Price is {chosenProduct.UnitPrice}");
           } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
           break;
+
         case "5":
           do
           {
@@ -435,7 +436,29 @@ do
               logger.Info("Please try again");
             }
             chosenProduct.QuantityPerUnit = editProductInput;
+            logger.Info($"New Quantity per Unit is {chosenProduct.QuantityPerUnit}");
           } while (editProductInput.IsNullOrEmpty());
+          break;
+
+        case "6":
+          do
+          {
+            Console.WriteLine("Units in Stock: ");
+            editProductInput = Console.ReadLine();
+            if (editProductInput.IsNullOrEmpty())
+            {
+              logger.Info("Input cannot be empty");
+              continue;
+            }
+            if (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"))
+            {
+              logger.Info("Please input a number");
+              continue;
+            }
+
+            chosenProduct.UnitsInStock = Convert.ToInt16(editProductInput);
+            logger.Info($"New Units in stock is {chosenProduct.UnitsInStock}");
+          } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
           break;
       }
     }
