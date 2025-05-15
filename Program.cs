@@ -19,6 +19,7 @@ var configuration = new ConfigurationBuilder()
 var config = configuration.Build();
 
 var db = new DataContext();
+var products = db.Products;
 var suppliers = db.Suppliers;
 var categories = db.Categories;
 
@@ -40,30 +41,14 @@ do
   if (choice == "1")
   {
     // display categories
-    string? categoryDisplayOption = "";
-
-    while (categoryDisplayOption != "q")
-    {
-      Console.WriteLine("1) Display all categories");
-      Console.WriteLine("2) Display all categories and their active products");
-      Console.WriteLine("3) Display one category and it's active products");
-      categoryDisplayOption = Console.ReadLine();
-      switch (categoryDisplayOption)
-      {
-        case "1":
-          var query = db.Categories.OrderBy(p => p.CategoryName);
-
           Console.ForegroundColor = ConsoleColor.Green;
-          Console.WriteLine($"{query.Count()} records returned");
+          Console.WriteLine($"{categories.Count()} records returned");
           Console.ForegroundColor = ConsoleColor.Magenta;
-          foreach (var item in query)
+          foreach (var item in categories)
           {
             Console.WriteLine($"{item.CategoryName} - {item.Description}");
           }
           Console.ForegroundColor = ConsoleColor.White;
-          break;
-      }
-    }
 
   }
   else if (choice == "2")
