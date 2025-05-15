@@ -460,6 +460,7 @@ do
             logger.Info($"New Units in stock is {chosenProduct.UnitsInStock}");
           } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
           break;
+
         case "7":
           do
           {
@@ -478,6 +479,27 @@ do
 
             chosenProduct.UnitsOnOrder = Convert.ToInt16(editProductInput);
             logger.Info($"New Units on order is {chosenProduct.UnitsOnOrder}");
+          } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
+          break;
+
+        case "8":
+          do
+          {
+            Console.WriteLine("Reorder level: ");
+            editProductInput = Console.ReadLine();
+            if (editProductInput.IsNullOrEmpty())
+            {
+              logger.Info("Input cannot be empty");
+              continue;
+            }
+            if (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"))
+            {
+              logger.Info("Please input a number");
+              continue;
+            }
+
+            chosenProduct.ReorderLevel = Convert.ToInt16(editProductInput);
+            logger.Info($"New Reorder level is {chosenProduct.UnitsOnOrder}");
           } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
           break;
       }
