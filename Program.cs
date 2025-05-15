@@ -424,6 +424,19 @@ do
             logger.Info($"New Price is {chosenProduct.UnitPrice}");
           } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
           break;
+        case "5":
+          do
+          {
+            editProductInput = "";
+            Console.WriteLine("Quantity Per Unit: ");
+            editProductInput = Console.ReadLine();
+            if (editProductInput.IsNullOrEmpty())
+            {
+              logger.Info("Please try again");
+            }
+            chosenProduct.QuantityPerUnit = editProductInput;
+          } while (editProductInput.IsNullOrEmpty());
+          break;
       }
     }
   }
