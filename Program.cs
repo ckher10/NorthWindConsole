@@ -328,14 +328,14 @@ do
       Console.WriteLine($"1) Name: {chosenProduct.ProductName}");
       Console.WriteLine($"2) Category ID:{chosenProduct.CategoryId}");
       Console.WriteLine($"3) Supplier ID:{chosenProduct.SupplierId}");
-      Console.WriteLine($"4) Price: {chosenProduct.UnitPrice}");
+      Console.WriteLine($"4) Price: ${chosenProduct.UnitPrice}");
       Console.WriteLine($"5) Quantity Per Unit: {chosenProduct.QuantityPerUnit}");
       Console.WriteLine($"6) Units in Stock: {chosenProduct.UnitsInStock}");
       Console.WriteLine($"7) Units On Order: {chosenProduct.UnitsOnOrder}");
       Console.WriteLine($"8) Reorder Level: {chosenProduct.ReorderLevel}");
       Console.WriteLine($"9) Discontinued: {chosenProduct.Discontinued}");
       Console.WriteLine("What property do you want to edit?");
-      Console.WriteLine("Enter 1-9 or q to quit");
+      Console.WriteLine("Enter 1-9 to change properties\n(\"s\") to save\n(\"q\") to quit");
 
       chosenProperty = Console.ReadLine();
 
@@ -503,7 +503,7 @@ do
           } while (!Regex.IsMatch(editProductInput, @"^\d+$"));
           break;
 
-          case "9":
+        case "9":
           do
           {
             Console.WriteLine($"Discontinued is currently {chosenProduct.Discontinued}");
@@ -533,6 +533,10 @@ do
             }
             else if (editProductInput == "2") break;
           } while (editProductInput != "1" && editProductInput != "2");
+          break;
+        case "s":
+          db.SaveChanges();
+          logger.Info("Changes Saved Successfully");
           break;
       }
     }
