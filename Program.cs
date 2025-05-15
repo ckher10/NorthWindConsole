@@ -29,6 +29,7 @@ do
   Console.WriteLine("5) Display products");
   Console.WriteLine("6) Find Product");
   Console.WriteLine("7) Add Product");
+  Console.WriteLine("8) Edit Product");
   Console.WriteLine("Enter to quit");
   string? choice = Console.ReadLine();
   Console.Clear();
@@ -242,25 +243,29 @@ do
       productInput = "";
       Console.WriteLine("Quantity Per Unit: ");
       productInput = Console.ReadLine();
-      if (productInput.IsNullOrEmpty()) {
+      if (productInput.IsNullOrEmpty())
+      {
         logger.Info("Please try again");
       }
       product.QuantityPerUnit = productInput;
     } while (productInput.IsNullOrEmpty());
 
-    do {
+    do
+    {
       productInput = "";
       Console.WriteLine("Price: ");
       productInput = Console.ReadLine();
-      if (productInput.IsNullOrEmpty()) {
+      if (productInput.IsNullOrEmpty())
+      {
         logger.Info("Product must have a price");
         continue;
       }
-      if (!Regex.IsMatch(productInput, @"^\d+(\.\d+)?$")) {
+      if (!Regex.IsMatch(productInput, @"^\d+(\.\d+)?$"))
+      {
         logger.Info("Please input a number");
         continue;
       }
-      
+
       product.UnitPrice = Convert.ToDecimal(productInput);
 
     } while (!Regex.IsMatch(productInput, @"^\d+(\.\d+)?$"));
@@ -290,6 +295,69 @@ do
       foreach (var result in results)
       {
         logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+      }
+    }
+  }
+  else if (choice == "8")
+  {
+    string? editProductInput = "";
+    bool productIDExists = false;
+
+    do
+    {
+      Console.WriteLine("Which Product do you want to edit?");
+      Console.Write("Product ID: ");
+      editProductInput = Console.ReadLine();
+      if (!Regex.IsMatch(editProductInput, @"^\d+$"))
+      {
+        logger.Info("Input must be a number");
+        continue;
+      }
+      productIDExists = db.Products.Any(p => p.ProductId == Convert.ToInt32(editProductInput));
+      if (!productIDExists)
+      {
+        logger.Info("ID does not exist");
+      }
+    } while (!productIDExists);
+
+    var chosenProduct = db.Products.Single(p => p.ProductId == Convert.ToInt32(editProductInput));
+    string chosenProperty = "";
+
+    while (chosenProperty != "q")
+    {
+      Console.WriteLine($"1) Name: {chosenProduct.ProductName}");
+      Console.WriteLine($"2) Category ID:{chosenProduct.CategoryId}");
+      Console.WriteLine($"3) Supplier ID:{chosenProduct.SupplierId}");
+      Console.WriteLine($"4) Price: {chosenProduct.UnitPrice}");
+      Console.WriteLine($"5) Quantity Per Unit: {chosenProduct.QuantityPerUnit}");
+      Console.WriteLine($"6) Units in Stock: {chosenProduct.UnitsInStock}");
+      Console.WriteLine($"7) Units On Order: {chosenProduct.UnitsOnOrder}");
+      Console.WriteLine($"8) Reorder Level: {chosenProduct.ReorderLevel}");
+      Console.WriteLine($"9) Discontinued: {chosenProduct.Discontinued}");
+      Console.WriteLine("What property do you want to edit?");
+      Console.WriteLine("Enter 1-9 or q to quit");
+
+      chosenProperty = Console.ReadLine();
+
+      switch (chosenProperty)
+      {
+        case "1":
+          do
+          {
+            Console.Write("New Name: ");
+            editProductInput = Console.ReadLine();
+            if (editProductInput.IsNullOrEmpty())
+            {
+              logger.Info("Please try again");
+              continue;
+            }
+            chosenProduct.ProductName = editProductInput;
+            logger.Info($"New Name is {chosenProduct.ProductName}");
+          } while (editProductInput.IsNullOrEmpty());
+          break;
+
+        case "2":
+          break;
       }
     }
   }
