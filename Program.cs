@@ -592,6 +592,21 @@ do
             logger.Info($"New Name is {chosenCategory.CategoryName}");
           } while (editCategoryInput.IsNullOrEmpty());
           break;
+
+          case "2":
+          do
+          {
+            Console.Write("New Description: ");
+            editCategoryInput = Console.ReadLine();
+            if (editCategoryInput.IsNullOrEmpty())
+            {
+              logger.Info("Please try again");
+              continue;
+            }
+            chosenCategory.Description = editCategoryInput;
+            logger.Info($"New Description: {chosenCategory.Description}");
+          } while (editCategoryInput.IsNullOrEmpty());
+          break;
       }
     }
   }
