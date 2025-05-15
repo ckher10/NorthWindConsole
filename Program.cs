@@ -450,7 +450,7 @@ do
               logger.Info("Input cannot be empty");
               continue;
             }
-            if (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"))
+            if (!Regex.IsMatch(editProductInput, @"^\d+$"))
             {
               logger.Info("Please input a number");
               continue;
@@ -458,7 +458,7 @@ do
 
             chosenProduct.UnitsInStock = Convert.ToInt16(editProductInput);
             logger.Info($"New Units in stock is {chosenProduct.UnitsInStock}");
-          } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
+          } while (!Regex.IsMatch(editProductInput, @"^\d+$"));
           break;
 
         case "7":
@@ -471,7 +471,7 @@ do
               logger.Info("Input cannot be empty");
               continue;
             }
-            if (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"))
+            if (!Regex.IsMatch(editProductInput, @"^\d+$"))
             {
               logger.Info("Please input a number");
               continue;
@@ -479,7 +479,7 @@ do
 
             chosenProduct.UnitsOnOrder = Convert.ToInt16(editProductInput);
             logger.Info($"New Units on order is {chosenProduct.UnitsOnOrder}");
-          } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
+          } while (!Regex.IsMatch(editProductInput, @"^\d+$"));
           break;
 
         case "8":
@@ -492,7 +492,7 @@ do
               logger.Info("Input cannot be empty");
               continue;
             }
-            if (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"))
+            if (!Regex.IsMatch(editProductInput, @"^\d+$"))
             {
               logger.Info("Please input a number");
               continue;
@@ -500,7 +500,39 @@ do
 
             chosenProduct.ReorderLevel = Convert.ToInt16(editProductInput);
             logger.Info($"New Reorder level is {chosenProduct.UnitsOnOrder}");
-          } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
+          } while (!Regex.IsMatch(editProductInput, @"^\d+$"));
+          break;
+
+          case "9":
+          do
+          {
+            Console.WriteLine($"Discontinued is currently {chosenProduct.Discontinued}");
+            Console.WriteLine($"Do you want to change Discontinued to {!chosenProduct.Discontinued}");
+            Console.WriteLine("1) Yes");
+            Console.WriteLine("2) No");
+            editProductInput = Console.ReadLine();
+            if (editProductInput.IsNullOrEmpty())
+            {
+              logger.Info("Input cannot be empty");
+              continue;
+            }
+            else if (!Regex.IsMatch(editProductInput, @"^\d+$"))
+            {
+              logger.Info("Please input a number");
+              continue;
+            }
+            else if (editProductInput != "1" && editProductInput != "2")
+            {
+              logger.Info("Please input either 1 or 2");
+              continue;
+            }
+            else if (editProductInput == "1")
+            {
+              chosenProduct.Discontinued = !chosenProduct.Discontinued;
+              logger.Info($"Discontinued is now {chosenProduct.Discontinued}");
+            }
+            else if (editProductInput == "2") break;
+          } while (editProductInput != "1" && editProductInput != "2");
           break;
       }
     }
