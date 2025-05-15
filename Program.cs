@@ -33,6 +33,7 @@ do
   Console.WriteLine("6) Find Product");
   Console.WriteLine("7) Add Product");
   Console.WriteLine("8) Edit Product");
+  Console.WriteLine("9) Edit Category");
   Console.WriteLine("Enter to quit");
   string? choice = Console.ReadLine();
   Console.Clear();
@@ -41,14 +42,14 @@ do
   if (choice == "1")
   {
     // display categories
-          Console.ForegroundColor = ConsoleColor.Green;
-          Console.WriteLine($"{categories.Count()} records returned");
-          Console.ForegroundColor = ConsoleColor.Magenta;
-          foreach (var item in categories)
-          {
-            Console.WriteLine($"{item.CategoryName} - {item.Description}");
-          }
-          Console.ForegroundColor = ConsoleColor.White;
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine($"{categories.Count()} records returned");
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    foreach (var item in categories)
+    {
+      Console.WriteLine($"{item.CategoryName} - {item.Description}");
+    }
+    Console.ForegroundColor = ConsoleColor.White;
 
   }
   else if (choice == "2")
@@ -537,6 +538,59 @@ do
         case "s":
           db.SaveChanges();
           logger.Info("Changes Saved Successfully");
+          break;
+      }
+    }
+  }
+  else if (choice == "9")
+  {
+    string? editCategoryInput = "";
+    bool categoryIDExists = false;
+
+    do
+    {
+      Console.WriteLine("Which Category do you want to edit?");
+      Console.Write("Category ID: ");
+      editCategoryInput = Console.ReadLine();
+      if (!Regex.IsMatch(editCategoryInput, @"^\d+$"))
+      {
+        logger.Info("Input must be a number");
+        continue;
+      }
+      categoryIDExists = db.Products.Any(p => p.ProductId == Convert.ToInt32(editCategoryInput));
+      if (!categoryIDExists)
+      {
+        logger.Info("ID does not exist");
+      }
+    } while (!categoryIDExists);
+
+    var chosenCategory = categories.Single(p => p.CategoryId == Convert.ToInt32(editCategoryInput));
+    string chosenProperty = "";
+
+    while (chosenProperty != "q")
+    {
+      Console.WriteLine($"1) Name: {chosenCategory.CategoryName}");
+      Console.WriteLine($"2) Description:{chosenCategory.Description}");
+      Console.WriteLine("What property do you want to edit?");
+      Console.WriteLine("Enter 1 or 2 to change properties\n(\"s\") to save\n(\"q\") to quit");
+
+      chosenProperty = Console.ReadLine();
+
+      switch (chosenProperty)
+      {
+        case "1":
+          do
+          {
+            Console.Write("New Name: ");
+            editCategoryInput = Console.ReadLine();
+            if (editCategoryInput.IsNullOrEmpty())
+            {
+              logger.Info("Please try again");
+              continue;
+            }
+            chosenCategory.CategoryName = editCategoryInput;
+            logger.Info($"New Name is {chosenCategory.CategoryName}");
+          } while (editCategoryInput.IsNullOrEmpty());
           break;
       }
     }
