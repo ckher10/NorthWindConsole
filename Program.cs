@@ -40,17 +40,31 @@ do
   if (choice == "1")
   {
     // display categories
+    string? categoryDisplayOption = "";
 
-    var query = db.Categories.OrderBy(p => p.CategoryName);
-
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine($"{query.Count()} records returned");
-    Console.ForegroundColor = ConsoleColor.Magenta;
-    foreach (var item in query)
+    while (categoryDisplayOption != "q")
     {
-      Console.WriteLine($"{item.CategoryName} - {item.Description}");
+      Console.WriteLine("1) Display all categories");
+      Console.WriteLine("2) Display all categories and their active products");
+      Console.WriteLine("3) Display one category and it's active products");
+      categoryDisplayOption = Console.ReadLine();
+      switch (categoryDisplayOption)
+      {
+        case "1":
+          var query = db.Categories.OrderBy(p => p.CategoryName);
+
+          Console.ForegroundColor = ConsoleColor.Green;
+          Console.WriteLine($"{query.Count()} records returned");
+          Console.ForegroundColor = ConsoleColor.Magenta;
+          foreach (var item in query)
+          {
+            Console.WriteLine($"{item.CategoryName} - {item.Description}");
+          }
+          Console.ForegroundColor = ConsoleColor.White;
+          break;
+      }
     }
-    Console.ForegroundColor = ConsoleColor.White;
+
   }
   else if (choice == "2")
   {
@@ -77,6 +91,7 @@ do
       {
         logger.Info("Validation passed");
         // TODO: save category to db
+        db.AddCategory(category);
       }
     }
     if (!isValid)
