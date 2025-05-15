@@ -405,7 +405,24 @@ do
           break;
 
         case "4":
+          do
+          {
+            Console.WriteLine("Price: ");
+            editProductInput = Console.ReadLine();
+            if (editProductInput.IsNullOrEmpty())
+            {
+              logger.Info("Product must have a price");
+              continue;
+            }
+            if (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"))
+            {
+              logger.Info("Please input a number");
+              continue;
+            }
 
+            chosenProduct.UnitPrice = Convert.ToDecimal(editProductInput);
+            logger.Info($"New Price is {chosenProduct.UnitPrice}");
+          } while (!Regex.IsMatch(editProductInput, @"^\d+(\.\d+)?$"));
           break;
       }
     }
