@@ -203,7 +203,8 @@ do
     {
       Console.WriteLine("Enter the Supplier ID: ");
       productInput = Console.ReadLine();
-      if (!Regex.IsMatch(productInput, @"^\d+$")) {
+      if (!Regex.IsMatch(productInput, @"^\d+$"))
+      {
         logger.Info("Input must be a number");
         continue;
       }
@@ -223,7 +224,8 @@ do
     {
       Console.WriteLine("Enter the Category ID: ");
       productInput = Console.ReadLine();
-      if (!Regex.IsMatch(productInput, @"^\d+$")) {
+      if (!Regex.IsMatch(productInput, @"^\d+$"))
+      {
         logger.Info("Input must be a number");
         continue;
       }
@@ -235,32 +237,61 @@ do
       }
     } while (!categoryIDExists);
 
+    do
+    {
+      productInput = "";
+      Console.WriteLine("Quantity Per Unit: ");
+      productInput = Console.ReadLine();
+      if (productInput.IsNullOrEmpty()) {
+        logger.Info("Please try again");
+      }
+      product.QuantityPerUnit = productInput;
+    } while (productInput.IsNullOrEmpty());
+
+    do {
+      productInput = "";
+      Console.WriteLine("Price: ");
+      productInput = Console.ReadLine();
+      if (productInput.IsNullOrEmpty()) {
+        logger.Info("Product must have a price");
+        continue;
+      }
+      if (!Regex.IsMatch(productInput, @"^\d+(\.\d+)?$")) {
+        logger.Info("Please input a number");
+        continue;
+      }
+      
+      product.UnitPrice = Convert.ToDecimal(productInput);
+
+    } while (!Regex.IsMatch(productInput, @"^\d+(\.\d+)?$"));
+
     ValidationContext context = new ValidationContext(product, null, null);
     List<ValidationResult> results = new List<ValidationResult>();
 
     var isValid = Validator.TryValidateObject(product, context, results, true);
-    // if (isValid)
-    // {
-    //   // check for unique name
-    //   if (db.Categories.Any(c => c.CategoryName == category.CategoryName))
-    //   {
-    //     // generate validation error
-    //     isValid = false;
-    //     results.Add(new ValidationResult("Name exists", ["CategoryName"]));
-    //   }
-    //   else
-    //   {
-    //     logger.Info("Validation passed");
-    //     // TODO: save category to db
-    //   }
-    // }
-    // if (!isValid)
-    // {
-    //   foreach (var result in results)
-    //   {
-    //     logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
-    //   }
-    // }
+    if (isValid)
+    {
+      // check for unique name
+      if (db.Products.Any(p => p.ProductName == product.ProductName))
+      {
+        // generate validation error
+        isValid = false;
+        results.Add(new ValidationResult("Name exists", ["CategoryName"]));
+      }
+      else
+      {
+        logger.Info("Validation passed");
+        //save product to db
+        db.AddProduct(product);
+      }
+    }
+    if (!isValid)
+    {
+      foreach (var result in results)
+      {
+        logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+      }
+    }
   }
   else if (String.IsNullOrEmpty(choice))
   {
