@@ -19,6 +19,8 @@ var configuration = new ConfigurationBuilder()
 var config = configuration.Build();
 
 var db = new DataContext();
+var suppliers = db.Suppliers;
+var categories = db.Categories;
 
 do
 {
@@ -191,8 +193,6 @@ do
   {
     //Add Product
     Product product = new();
-    var suppliers = db.Suppliers;
-    var categories = db.Categories;
     Console.WriteLine("Enter Product Name: ");
     product.ProductName = Console.ReadLine()!;
 
@@ -357,6 +357,55 @@ do
           break;
 
         case "2":
+          foreach (var category in categories) Console.WriteLine($"{category.CategoryId} | {category.CategoryName}");
+
+          bool categoryIDExists = false;
+          do
+          {
+            Console.WriteLine("Enter the Category ID: ");
+            editProductInput = Console.ReadLine();
+            if (!Regex.IsMatch(editProductInput, @"^\d+$"))
+            {
+              logger.Info("Input must be a number");
+              continue;
+            }
+            categoryIDExists = suppliers.Any(p => p.SupplierId == Convert.ToInt32(editProductInput));
+            if (!categoryIDExists)
+            {
+              logger.Info("ID does not exist");
+              continue;
+            }
+            chosenProduct.CategoryId = Convert.ToInt32(editProductInput);
+            logger.Info($"New Category is {chosenProduct.CategoryId}");
+          } while (!categoryIDExists);
+          break;
+
+        case "3":
+          foreach (var supplier in suppliers) Console.WriteLine($"{supplier.SupplierId} | {supplier.CompanyName}");
+
+          bool supplierIDExists = false;
+          do
+          {
+            Console.WriteLine("Enter the Supplier ID: ");
+            editProductInput = Console.ReadLine();
+            if (!Regex.IsMatch(editProductInput, @"^\d+$"))
+            {
+              logger.Info("Input must be a number");
+              continue;
+            }
+            supplierIDExists = suppliers.Any(p => p.SupplierId == Convert.ToInt32(editProductInput));
+            if (!supplierIDExists)
+            {
+              logger.Info("ID does not exist");
+              continue;
+            }
+            chosenProduct.SupplierId = Convert.ToInt32(editProductInput);
+            logger.Info($"New Supplier is {chosenProduct.SupplierId}");
+          } while (!supplierIDExists);
+          break;
+
+        case "4":
+
           break;
       }
     }
